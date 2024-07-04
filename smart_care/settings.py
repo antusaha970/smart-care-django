@@ -18,8 +18,8 @@ SECRET_KEY = 'django-insecure-i(wm188*$!u_iiitxoyiu+7&mu!3hcd094)c^1r17n^v0a*uw$
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CORS_ALLOW_ALL_ORIGINS = True
-
+CSRF_TRUSTED_ORIGINS = ['https://smart-care-django.onrender.com']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'appointment',
     'contact_us',
     'doctor',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
