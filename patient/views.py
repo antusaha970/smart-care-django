@@ -9,7 +9,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.authtoken.models import Token
 
 
@@ -67,7 +67,15 @@ class UserLoginAPIview(APIView):
 
             if user:
                 token, _ = Token.objects.get_or_create(user=user)
+                login(request, user=user)
                 return Response({'token': token.key, 'user_id': user.id})
             else:
                 return Response({'errors': "No users exist with given credentials"})
         return Response(serializer.errors)
+
+
+class UserLogoutAPIview(APIView):
+    def get(self, request, *args):
+        request.user.auth_token.delete()
+        logout(request)
+        return redirect("login")

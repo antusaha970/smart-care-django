@@ -2,10 +2,19 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from . import serializers
 from . import models
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
 class DoctorViewSet(viewsets.ModelViewSet):
+    pagination_class = StandardResultsSetPagination
     queryset = models.Doctor.objects.all()
     serializer_class = serializers.DoctorSerializer
 
