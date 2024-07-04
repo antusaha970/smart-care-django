@@ -4,7 +4,7 @@ from . import serializers
 from . import models
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-# Create your views here.
+from rest_framework import filters
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -24,9 +24,18 @@ class SpecializationViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SpecializationSerializer
 
 
+class AvailableTimeFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        doctor_id = request.query_params.get('doctor_id')
+        if doctor_id:
+            return queryset.filter(doctor=doctor_id)
+        return queryset
+
+
 class AvailableTimeViewSet(viewsets.ModelViewSet):
     queryset = models.AvailableTime.objects.all()
     serializer_class = serializers.AvailableTimeSerializer
+    filter_backends = [AvailableTimeFilter]
 
 
 class DesignationViewSet(viewsets.ModelViewSet):
